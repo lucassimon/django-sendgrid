@@ -73,31 +73,36 @@ class EmailSendgrid(TimeStampedModel):
     categories = models.CharField(
         _('SendGrid Categories'),
         max_length=255,
-        blank=True
+        blank=True,
+        null=True
     )
 
     sg_message_id = models.CharField(
         _('SendGrid Message Id'),
         max_length=255,
-        blank=True
+        blank=True,
+        null=True
     )
 
     timestamp = models.CharField(
         _('SendGrid Timestamp'),
         max_length=255,
-        blank=True
+        blank=True,
+        null=True
     )
 
     smtp_id = models.CharField(
         _('SendGrid SMTP Id'),
         max_length=255,
-        blank=True
+        blank=True,
+        null=True
     )
 
     ip = models.CharField(
         _('SendGrid IP'),
         max_length=255,
-        blank=True
+        blank=True,
+        null=True
     )
 
     def __unicode__(self):

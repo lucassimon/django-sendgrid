@@ -164,7 +164,7 @@ class SendgridHook(View):
                     email.event = event['event']
                 else:
                     # TODO salvar em um LOG o Erro
-                    raise
+                    print event['event']
             except KeyError:
                 # TODO salvar em um LOG o Erro
                 raise
