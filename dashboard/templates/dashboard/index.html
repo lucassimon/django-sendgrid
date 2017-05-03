@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content_header_title %} {{title}} {% endblock %}
+{% block content_header_description %} {{description}} {% endblock %}
+{% block breadcrumb %}
+    <li>
+        <a href="{% url 'dashboard' %}">
+            <i class="fa fa-dashboard"></i>
+            Dashboard
+        </a>
+    </li>
+    <li class="active">
+        Principal
+    </li>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-responsive">
+                    <thead>
+                        <th>Status</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Category</th>
+                        <th>Created</th>
+                        <th>Modified</th>
+                    </thead>
+                    <tbody>
+
+                        {% for email in emails %}
+                            <tr>
+                                <td>{{email.event}}</td>
+                                <td>{{email.email}}</td>
+                                <td>{{email.subject}}</td>
+                                <td>{{email.subject}}</td>
+                                <td>{{email.created}}</td>
+                                <td>{{email.modified}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <th>Status</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Category</th>
+                        <th>Created</th>
+                        <th>Modified</th>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

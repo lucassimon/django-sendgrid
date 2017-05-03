@@ -22,10 +22,11 @@ EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 
 
-
+EMAIL_BACKEND = "sgbackend.SendGridBackend"
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'lucassrod'
-EMAIL_HOST_PASSWORD = 'apresentacao123'
+# EMAIL_HOST_PASSWORD = 'apresentacao123'
+SENDGRID_API_KEY = "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"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -33,7 +34,7 @@ EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' #envia e-mail
 SERVER_EMAIL = 'Grupo Andrade Martins <no-reply@grupoandrademartins.com.br>'
 
-EMAIL_BACKEND = "sgbackend.SendGridBackend"
+
 
 # #########  END MAILTRAP CONFIGURATION
 

@@ -2,6 +2,7 @@ from django.conf.urls import include, url
 from django.contrib.sitemaps.views import sitemap
 from django.conf import settings
 
+from dashboard.views import Dashboard, NotAllowed
 
 from django.contrib import admin
 admin.autodiscover()
@@ -21,6 +22,17 @@ urlpatterns = [
         {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'
     ),
+
+    url(
+        r'^$',
+        Dashboard.as_view(),
+        name='dashboard'
+    ),
+
+    url(
+        r'^invoice/',
+        include('invoices.urls', namespace='invoices')
+    )
 
 ]
 

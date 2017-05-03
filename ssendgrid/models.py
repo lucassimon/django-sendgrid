@@ -7,7 +7,9 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 # Third-party app imports
-
+from django_extensions.db.models import (
+    TimeStampedModel
+)
 # Imports from your apps
 
 try:
@@ -24,9 +26,15 @@ def _new_uuid():
     return str(uuid.uuid4())
 
 
-class EmailSendgrid(models.model):
+class EmailSendgrid(TimeStampedModel):
     """
     """
+
+    code = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+    )
 
     content_type = models.ForeignKey(
         ContentType,
@@ -44,25 +52,21 @@ class EmailSendgrid(models.model):
         _('email'),
         max_length=255
     )
+
     subject = models.CharField(
         _('subject'),
         max_length=255
     )
+
     event = models.CharField(
         _('event type'),
         max_length=32
     )
+
     reason = models.CharField(
         _('reason'),
         max_length=255,
         default=''
-    )
-    # timestamp = models.DateTimeField(_('timestamp'))
-    uuid = models.CharField(
-        _('reference UUID'),
-        max_length=255,
-        default=_new_uuid,
-        db_index=True
     )
 
     class Meta:

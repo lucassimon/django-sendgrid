@@ -2,15 +2,10 @@
 from __future__ import unicode_literals
 # Stdlib imports
 
-
 # Core Django imports
-from django.contrib import admin
+from django.db import models
 from django.utils.translation import ugettext as _
-
+from django.core.urlresolvers import reverse
 # Third-party app imports
 
-# Realative imports of the 'app-name' package
-
-from .models import EmailSendgrid
-
-admin.site.register(EmailSendgrid)
+# Imports from your apps

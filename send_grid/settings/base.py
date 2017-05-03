@@ -100,6 +100,9 @@ INSTALLED_APPS = (
 
     # my apps
     'core',
+    'dashboard',
+    'invoices',
+    'ssendgrid',
 
     # third apps
     # 'django_jinja',

@@ -20,3 +20,6 @@ webtest
 nose-progressive
 xtraceback
 sqlformatter
+sendgrid==2.2.1
+sendgrid-django==2.0.0
+Faker

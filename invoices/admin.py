@@ -10,7 +10,6 @@ from django.utils.translation import ugettext as _
 # Third-party app imports
 
 # Realative imports of the 'app-name' package
+from .models import Invoice
 
-from .models import EmailSendgrid
-
-admin.site.register(EmailSendgrid)
+admin.site.register(Invoice)

@@ -10,11 +10,8 @@ from django.conf import settings
 # Third-party app imports
 
 # Imports from your apps
-from .views import SendgridHook
+from .views import generate_invoice
 
 urlpatterns = [
-    url(
-        r'^sendgrid_callback/$',
-        SendgridHook.as_view()
-    ),
+    url(r'^$', generate_invoice, name='generate'),
 ]
