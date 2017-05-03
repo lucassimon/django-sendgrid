@@ -32,7 +32,7 @@ EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' #envia e-mail
-SERVER_EMAIL = 'Grupo Andrade Martins <no-reply@grupoandrademartins.com.br>'
+
 
 
 
