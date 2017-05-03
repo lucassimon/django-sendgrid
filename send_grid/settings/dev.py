@@ -25,8 +25,8 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 EMAIL_BACKEND = "sgbackend.SendGridBackend"
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'lucassrod'
-# EMAIL_HOST_PASSWORD = 'apresentacao123'
-SENDGRID_API_KEY = "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"
+
+SENDGRID_API_KEY = os.environ.get('SENDGRID')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
