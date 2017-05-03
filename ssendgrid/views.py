@@ -4,10 +4,15 @@ from __future__ import unicode_literals
 # Stdlib imports
 import json
 import datetime
+import sendgrid
+import os
+
 # Core Django imports
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.views.generic import View, CreateView, TemplateView, ListView, DetailView
+from django.views.generic import (
+    View, CreateView, TemplateView, ListView, DetailView
+)
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -16,10 +21,42 @@ from django.utils.timezone import utc
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
 from django.conf import settings
-# Third-party app imports
 
+# Third-party app imports
+from dateutil.relativedelta import relativedelta
 # Imports from your apps
 from .models import EmailSendgrid
+
+
+# Core Django imports
+
+
+class EmailView(
+    TemplateView
+):
+
+    template_name = 'ssendgrid/emails_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(EmailView, self).get_context_data(
+            *args,
+            **kwargs
+        )
+
+        context['title'] = 'Emails enviados'
+        context['description'] = (
+            'Emails enviados para o sendgrid'
+        )
+
+        now = datetime.date.today()
+
+        month_ago = now - relativedelta(month=1)
+
+        context['emails'] = EmailSendgrid.objects.filter(
+            modified__gte=month_ago
+        )
+
+        return context
 
 
 class SendgridHook(View):
@@ -73,36 +110,65 @@ class SendgridHook(View):
 
     def post(self, request):
         response = json.loads(request.body)
+
+        email = None
+
         for event in response:
+
+            if 'code' not in event.keys():
+                return HttpResponse('Thanks!')
+
             try:
                 email = EmailSendgrid.objects.get(code=event['code'])
-                email.email = event['email']
-                email.reason = event.get('reason', None)
-                if email.reason is None:
-                    email.reason = ''
+            except Exception:
+                # TODO salvar em um LOG o Erro
+                raise
+            except (EmailSendgrid.DoesNotExist, KeyError):
+                raise
 
-                try:
-                    current_options = self.state_flow[email.event]
-                    if event['event'] in current_options:
-                        email.event = event['event']
-                    else:
-                        continue
-                        # XXX log that callbacks arrive in the wrong order or are duplicates
-                except KeyError:
-                    if not getattr(settings, 'SENDGRID_EVENTS_IGNORE_MISSING', False):
-                        raise
-                    else:
-                        pass
-                        # XXX log that we are in an unknown state and most likely something is wrong
-                        #     (or the API got updated)
-                timestamp = datetime.datetime.fromtimestamp(int(event['timestamp']))
+            if 'email' in event.keys():
+                email.email = event.get('email')
+            else:
+                # TODO salvar em um LOG o Erro
+                raise
+
+            email.reason = event.get('reason', '')
+
+            if event.get('category'):
+                email.categories = ' ,'.join(
+                    cat for cat in event.get('category')
+                )
+
+            if event.get('sg_message_id'):
+                email.sg_message_id = event.get('sg_message_id')
+
+            if event.get('smtp-id'):
+                email.smtp_id = event.get('smtp-id')
+
+            if event.get('smtp-id'):
+                email.smtp_id = event.get('ip')
+
+            if event.get('timestamp'):
+                timestamp = datetime.datetime.fromtimestamp(
+                    int(
+                        event['timestamp']
+                    )
+                )
                 if settings.USE_TZ:
                     timestamp = timestamp.utcnow().replace(tzinfo=utc)
                 email.timestamp = timestamp
-                email.save()
 
-            except (Email.DoesNotExist, KeyError):
-                if not getattr(settings, 'SENDGRID_EVENTS_IGNORE_MISSING', False):
+            try:
+                current_options = self.state_flow[email.event]
+                if event['event'] in current_options:
+                    email.event = event['event']
+                else:
+                    # TODO salvar em um LOG o Erro
                     raise
+            except KeyError:
+                # TODO salvar em um LOG o Erro
+                raise
+
+            email.save()
 
         return HttpResponse('Thanks!')

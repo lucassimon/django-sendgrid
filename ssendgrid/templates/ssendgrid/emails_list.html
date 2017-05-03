@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content_header_title %} {{title}} {% endblock %}
+{% block content_header_description %} {{description}} {% endblock %}
+{% block breadcrumb %}
+    <li>
+        <a href="{% url 'dashboard' %}">
+            <i class="fa fa-dashboard"></i>
+            Emails
+        </a>
+    </li>
+    <li class="active">
+        Lista de emails enviados
+    </li>
+{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-default color-palette-box">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-tag"></i> Color Palette</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <table class="table ">
+                        <thead>
+                            <th>Status</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th>Category</th>
+
+                            <th></th>
+                        </thead>
+                        <tbody>
+
+                            {% for email in emails %}
+                                <tr>
+                                    <td>
+
+                                        {% if email.event == 'open' %}
+                                            <img src="{% static 'img/sendgrid/open.svg' %}">
+                                        {% elif email.event == 'delivered' %}
+                                            <img src="{% static 'img/sendgrid/deliver.svg' %}">
+                                        {% elif email.event == 'processed' %}
+                                            <img src="{% static 'img/sendgrid/processed.svg' %}">
+                                        {% elif email.event == 'dropped' %}
+                                            <img src="{% static 'img/sendgrid/drop.svg' %}">
+                                        {% elif email.event == 'bounce' %}
+                                            <img src="{% static 'img/sendgrid/bounce.svg' %}">
+                                        {% elif email.event == 'click' %}
+                                            <img src="{% static 'img/sendgrid/click.svg' %}">
+                                        {% elif email.event == 'received' %}
+                                            <img src="{% static 'img/sendgrid/deliver.svg' %}">
+                                        {% elif email.event == 'unsubscribe' %}
+                                            <img src="{% static 'img/sendgrid/unsubscribe.svg' %}">
+                                        {% elif email.event == 'spamreport' %}
+                                            <img src="{% static 'img/sendgrid/spam.svg' %}">
+                                        {% endif %}
+
+                                        {{ email.event }}
+                                    </td>
+                                    <td>{{ email.email }}</td>
+                                    <td>{{ email.subject }}</td>
+                                    <td>{{ email.categories }}</td>
+                                    <td>
+                                        <i class="fa fa-envelope-o" data-toggle="tooltip" data-placement="bottom" data-html="true" title="<dl>
+                                                <dt>SMTP-ID</dt>
+                                                <dd>{{ email.smtp_id }}</dd>
+                                                <dt>Processed String</dt>
+                                                <dd>{{ email.timestamp }}</dd>
+                                                <dt>MSGID</dt>
+                                                <dd>{{ email.sg_message_id }}</dd>
+                                                <dt>IP Address</dt>
+                                                <dd>{{ email.ip }}</dd>
+                                            </dl>">
+
+                                        </button>
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <th>Status</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th>Category</th>
+
+                            <th></th>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

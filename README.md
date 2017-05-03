@@ -1,6 +1,11 @@
 #django-project-template
 
+
+`psql -U postgres -h localhost -W`
+
 `createdb -E utf-8 -h localhost -p 5432 -U postgres test_sendgrid`
+
+
 
 """
 

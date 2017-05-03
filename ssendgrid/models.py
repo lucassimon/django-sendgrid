@@ -28,6 +28,7 @@ def _new_uuid():
 
 class EmailSendgrid(TimeStampedModel):
     """
+    Salva os email enviados pelo sendgrid
     """
 
     code = models.UUIDField(
@@ -68,6 +69,45 @@ class EmailSendgrid(TimeStampedModel):
         max_length=255,
         default=''
     )
+
+    categories = models.CharField(
+        _('SendGrid Categories'),
+        max_length=255,
+        blank=True
+    )
+
+    sg_message_id = models.CharField(
+        _('SendGrid Message Id'),
+        max_length=255,
+        blank=True
+    )
+
+    timestamp = models.CharField(
+        _('SendGrid Timestamp'),
+        max_length=255,
+        blank=True
+    )
+
+    smtp_id = models.CharField(
+        _('SendGrid SMTP Id'),
+        max_length=255,
+        blank=True
+    )
+
+    ip = models.CharField(
+        _('SendGrid IP'),
+        max_length=255,
+        blank=True
+    )
+
+    def __unicode__(self):
+
+        return '{}, {}'.format(
+            self.email,
+            self.subject
+        )
+
+    __str__ = __unicode__
 
     class Meta:
         verbose_name = _(u'Email')

@@ -27,6 +27,15 @@ class Invoice(TimeStampedModel):
         verbose_name='Valor em centavos',
     )
 
+    def __unicode__(self):
+
+        return '{} R$ {}'.format(
+            self.code,
+            self.price
+        )
+
+    __str__ = __unicode__
+
     class Meta:
 
         verbose_name = 'Fatura'

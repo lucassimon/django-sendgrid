@@ -29,6 +29,12 @@ urlpatterns = [
         name='dashboard'
     ),
 
+
+    url(
+        r'^emails/',
+        include('ssendgrid.urls', namespace='emails')
+    ),
+
     url(
         r'^invoice/',
         include('invoices.urls', namespace='invoices')

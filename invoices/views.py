@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 
 # Stdlib imports
+import os
+import sendgrid
 import logging
 # Core Django imports
 from django.shortcuts import render_to_response
@@ -22,6 +24,8 @@ from django.core.mail import EmailMessage
 # Third-party app imports
 from faker import Factory
 from sgbackend import SendGridBackend
+from sendgrid.helpers.mail import *
+
 # Imports from your apps
 from .models import Invoice
 from ssendgrid.models import EmailSendgrid
@@ -32,13 +36,6 @@ fake = Factory.create('pt_BR')
 def generate_invoice(request):
     """
     """
-
-    send_ok = send_mail(
-        "Your Subject",
-        "This is a simple text email body.",
-        "Yamil Asusta <hello@yamilasusta.com>",
-        ["lucassrod@gmail.com"]
-    )
 
     invoice = Invoice.objects.create(
         price=fake.pyint()
@@ -54,7 +51,7 @@ def generate_invoice(request):
         invoice.created
     )
 
-    EmailSendgrid.objects.create(
+    send = EmailSendgrid.objects.create(
         content_type=ct,
         object_id=invoice.pk,
         email='lucassrod@gmail.com',
@@ -62,22 +59,25 @@ def generate_invoice(request):
         event='initiated'
     )
 
-    msg = EmailMessage(
+    msg = EmailMultiAlternatives(
         subject=subject,
-        body="Hello, %username% This is a simple text email body.",
+        body="This is a simple text email body.",
         from_email="Teste Django <testdjango@djangoapp.com>",
-        to=["lucassrd@gmail.com"],
-        headers={"Reply-To": "support@sendgrid.com"}
+        reply_to=['teste@djangoteste.com'],
+        to=["lucassrod@gmail.com"],
     )
 
-    # Replace substitutions in sendgrid template
-    msg.substitutions = {'%username%': 'Lucas Simon'}
+    msg.categories = ['teste']
 
-    msg.categories = ['teste', 'development']
+    msg.extra_headers = {'INVOICE_CODE': '{}'.format(invoice.pk)}
 
-    msg.extra_headers = {'EXTRA_HEADER': 'VALUE'}
+    msg.custom_args = [
+        {'invoice_code': '{}'.format(invoice.pk)},
+        {'content_type': '{}'.format(ct.pk)},
+        {'code': '{}'.format(send.code)},
+    ]
 
-    mail = SendGridBackend()._build_sg_mail(msg)
+    msg.send()
 
     response = HttpResponse()
 
