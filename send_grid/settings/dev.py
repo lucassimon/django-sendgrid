@@ -24,7 +24,7 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 
 EMAIL_BACKEND = "sgbackend.SendGridBackend"
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'lucassrod'
+
 
 SENDGRID_API_KEY = os.environ.get('SENDGRID')
 EMAIL_PORT = 587
