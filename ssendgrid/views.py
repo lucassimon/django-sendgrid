@@ -119,12 +119,21 @@ class SendgridHook(View):
                 return HttpResponse('Thanks!')
 
             try:
-                email = EmailSendgrid.objects.get(code=event['code'])
+                parent = EmailSendgrid.objects.get(code=event['code'])
             except Exception:
                 # TODO salvar em um LOG o Erro
                 raise
             except (EmailSendgrid.DoesNotExist, KeyError):
                 raise
+
+            email = EmailSendgrid.objects.create(
+                parent=parent,
+                content_type=parent.content_type,
+                object_id=parent.object_id,
+                email=parent.email,
+                subject=parent.subject,
+                name=parent.subject
+            )
 
             if 'email' in event.keys():
                 email.email = event.get('email')
@@ -145,8 +154,8 @@ class SendgridHook(View):
             if event.get('smtp-id'):
                 email.smtp_id = event.get('smtp-id')
 
-            if event.get('smtp-id'):
-                email.smtp_id = event.get('ip')
+            if event.get('ip'):
+                email.ip = event.get('ip')
 
             if event.get('timestamp'):
                 timestamp = datetime.datetime.fromtimestamp(
@@ -159,7 +168,7 @@ class SendgridHook(View):
                 email.timestamp = timestamp
 
             try:
-                current_options = self.state_flow[email.event]
+                current_options = self.state_flow[parent.event]
                 if event['event'] in current_options:
                     email.event = event['event']
                 else:

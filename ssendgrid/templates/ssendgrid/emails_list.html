@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load staticfiles mptt_tags %}
 {% block content_header_title %} {{title}} {% endblock %}
 {% block content_header_description %} {{description}} {% endblock %}
 {% block breadcrumb %}
@@ -14,6 +14,27 @@
     </li>
 {% endblock %}
 {% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <ul>
+            {% recursetree emails %}
+                <li>
+                    {{ node.name }}
+                    {% if not node.is_leaf_node %}
+
+                        <ul class="children">
+                            {{ children }}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endrecursetree %}
+        </ul>
+    </div>
+
+
+</div>
+
 
 <div class="row">
     <div class="col-md-12">

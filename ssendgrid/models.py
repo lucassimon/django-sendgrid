@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django_extensions.db.models import (
     TimeStampedModel
 )
+from mptt.models import MPTTModel, TreeForeignKey
 # Imports from your apps
 
 try:
@@ -26,10 +27,18 @@ def _new_uuid():
     return str(uuid.uuid4())
 
 
-class EmailSendgrid(TimeStampedModel):
+class EmailSendgrid(MPTTModel, TimeStampedModel):
     """
     Salva os email enviados pelo sendgrid
     """
+
+    parent = TreeForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        related_name='children',
+        db_index=True
+    )
 
     code = models.UUIDField(
         default=uuid.uuid4,
@@ -56,6 +65,11 @@ class EmailSendgrid(TimeStampedModel):
 
     subject = models.CharField(
         _('subject'),
+        max_length=255
+    )
+
+    name = models.CharField(
+        _('name'),
         max_length=255
     )
 
@@ -114,6 +128,10 @@ class EmailSendgrid(TimeStampedModel):
 
     __str__ = __unicode__
 
+    class MPTTMeta:
+        order_insertion_by = ['code']
+
     class Meta:
+
         verbose_name = _(u'Email')
         verbose_name_plural = _(u'Emails')

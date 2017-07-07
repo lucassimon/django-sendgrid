@@ -55,6 +55,7 @@ def generate_invoice(request):
         content_type=ct,
         object_id=invoice.pk,
         email='lucassrod@gmail.com',
+        name=subject,
         subject=subject,
         event='initiated'
     )
